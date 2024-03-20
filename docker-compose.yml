@@ -1,0 +1,18 @@
+version: '3.7'
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "8080:8080"
+    environment:
+      - COMPLEXITY=6
+
+  client:
+    build: ./client
+    depends_on:
+      - server
+    environment:
+      - SERVER_ADDRESS=server:8080
+      - COMPLEXITY=6
+

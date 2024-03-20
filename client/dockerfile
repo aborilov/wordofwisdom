@@ -1,0 +1,22 @@
+# Start from the official Golang image to create a build artifact.
+FROM golang:1.18 as builder
+
+# Set the working directory inside the container.
+WORKDIR /app
+
+# Copy the go source files.
+COPY client.go .
+
+# Disable CGO and build the client binary.
+RUN CGO_ENABLED=0 GOOS=linux go build -v -o /client client.go
+
+# Use a small image to run the client.
+# Alpine is chosen for its small size and compatibility.
+FROM alpine:latest
+
+# Copy the client binary from the builder stage.
+COPY --from=builder /client /client
+
+# Command to run the executable.
+CMD ["/client"]
+
